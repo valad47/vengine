@@ -70,6 +70,7 @@ void load_libtask(lua_State *L) {
         exit(1);
     }
 
+    fclose(fd);
     free(bytecode);
     free(buffer);
 
