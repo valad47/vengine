@@ -42,8 +42,6 @@ int vengine_close(vengine_State* L) {
 int vengine_loadstring(vengine_State* L, const char *str) {
     VENGINE_FUNC;
 
-    printf(str);
-
     size_t bytecode_size;
     char *bytecode = luau_compile(str, strlen(str), NULL, &bytecode_size);
 
