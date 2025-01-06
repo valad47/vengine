@@ -21,6 +21,18 @@ static int vel_setfps(lua_State *L) {
     return 0;
 }
 
+static int vel_showfps(lua_State *L) {
+    if(!lua_isboolean(L, 1)) {
+        luaL_error(L, "ShowFPS claims only boolean argument");
+    }
+
+    lua_getglobal(L, "__vengine");
+    vengine_State *VL = lua_tolightuserdata(L, 2);
+    VL->show_fps = lua_toboolean(L, 1);
+
+    return 0;
+}
+
 static int vel_clearbg(lua_State *L) {
     int argc = lua_gettop(L);
     if(argc < 3) {
@@ -69,6 +81,7 @@ void vel_openlib(lua_State *L) {
     static const luaL_Reg funcs[] = {
         {"SetWindowSize", vel_setwindowsize},
         {"SetFPS", vel_setfps},
+        {"ShowFPS", vel_showfps},
         {"ClearBackground", vel_clearbg},
 
         {NULL, NULL}

@@ -11,6 +11,7 @@
 typedef struct vengine_State {
     lua_State *L;
     lua_CFunction lua_loop;
+    bool show_fps;
 } vengine_State;
 
 // Macro that checks if lua state exist, without which, functions other than init cannot work

@@ -45,7 +45,9 @@ void vengine_runtime_start(vengine_State *L) {
             exit(1);
         };
         //dumpstack(L->L);
-
+        if (L->show_fps) {
+            DrawFPS(5, 5);
+        }
 
         EndDrawing();
     }
