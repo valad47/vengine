@@ -24,9 +24,6 @@ vengine_State* vengine_init() {
     lua_pushlightuserdata(L->L, L);
     lua_setglobal(L->L, "__vengine");
 
-    lua_newtable(L->L);
-    lua_setglobal(L->L, "__vengine_window");
-
     printf("Succesfully started engine\n");
     return L;
 }
