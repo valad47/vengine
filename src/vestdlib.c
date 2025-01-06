@@ -33,18 +33,21 @@ static int vel_showfps(lua_State *L) {
     return 0;
 }
 
-static int vel_clearbg(lua_State *L) {
+static int vel_setbg(lua_State *L) {
     int argc = lua_gettop(L);
     if(argc < 3) {
         luaL_error(L, "Function expects 3 arguments, provided %d", argc);
     }
 
-    ClearBackground((Color){
+    lua_getglobal(L, "__vengine");
+    vengine_State *VL = lua_tolightuserdata(L, -1);
+    VL->bg_color = (Color){
         lua_tointeger(L, 1),
         lua_tointeger(L, 2),
         lua_tointeger(L, 3),
         255
-    });
+    };
+
     return 0;
 }
 
@@ -82,7 +85,7 @@ void vel_openlib(lua_State *L) {
         {"SetWindowSize", vel_setwindowsize},
         {"SetFPS", vel_setfps},
         {"ShowFPS", vel_showfps},
-        {"ClearBackground", vel_clearbg},
+        {"SetBackgroundColor", vel_setbg},
 
         {NULL, NULL}
     };
