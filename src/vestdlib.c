@@ -8,23 +8,26 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define expect(L, id, type)\
+if(lua_type(L, id) != type)\
+luaL_typeerror(L, id, lua_typename(L, type))
+
 static int vel_setwindowsize(lua_State *L) {
-    lua_settop(L, 2);
-    lua_Number x = luaL_checknumber(L, -2), y = luaL_checknumber(L, -1);
+    expect(L, 1, LUA_TNUMBER);
+    expect(L, 2, LUA_TNUMBER);
+    lua_Number x = lua_tonumber(L, 1), y = lua_tonumber(L, 2);
     SetWindowSize(x, y);
     return 0;
 }
 
 static int vel_setfps(lua_State *L) {
-    lua_settop(L, 1);
-    SetTargetFPS((int)luaL_checknumber(L, 1));
+    expect(L, 1, LUA_TNUMBER);
+    SetTargetFPS(lua_tointeger(L, 1));
     return 0;
 }
 
 static int vel_showfps(lua_State *L) {
-    if(!lua_isboolean(L, 1)) {
-        luaL_error(L, "ShowFPS claims only boolean argument");
-    }
+    expect(L, 1, LUA_TBOOLEAN);
 
     lua_getglobal(L, "__vengine");
     vengine_State *VL = lua_tolightuserdata(L, 2);
@@ -34,10 +37,9 @@ static int vel_showfps(lua_State *L) {
 }
 
 static int vel_setbg(lua_State *L) {
-    int argc = lua_gettop(L);
-    if(argc < 3) {
-        luaL_error(L, "Function expects 3 arguments, provided %d", argc);
-    }
+    expect(L, 1, LUA_TNUMBER);
+    expect(L, 2, LUA_TNUMBER);
+    expect(L, 3, LUA_TNUMBER);
 
     lua_getglobal(L, "__vengine");
     vengine_State *VL = lua_tolightuserdata(L, -1);
