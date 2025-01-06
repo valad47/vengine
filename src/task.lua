@@ -27,7 +27,7 @@ function task.step()
     end
 
     for i, v in pairs(wait_poll) do
-        if v <= os.time() then
+        if v <= GetTime() then
             wait_poll[i] = nil
             local pass, err = coroutine.resume(i)
         if not pass then
@@ -35,8 +35,6 @@ function task.step()
         end
         end
     end
-
---    return true
 end
 
 function task.spawn(f, ...)
@@ -55,13 +53,13 @@ function task.spawn(f, ...)
 end
 
 function task.wait(time)
-    local current = os.time()
+    local current = GetTime()
     local thread, main = coroutine.running()
 
     wait_poll[thread] = if time then time + current else current
 
     coroutine.yield()
-    return (os.time() - current)
+    return (GetTime() - current)
 end
 
 

@@ -53,6 +53,11 @@ static int vel_setbg(lua_State *L) {
     return 0;
 }
 
+static int vel_gettime(lua_State *L) {
+    lua_pushnumber(L, GetTime());
+    return 1;
+}
+
 const char *lua_globals =
 "";
 
@@ -89,6 +94,7 @@ void vel_openlib(lua_State *L) {
         {"SetFPS", vel_setfps},
         {"ShowFPS", vel_showfps},
         {"SetBackgroundColor", vel_setbg},
+        {"GetTime", vel_gettime},
 
         {NULL, NULL}
     };
