@@ -7,7 +7,10 @@ Currently it lacks of functionality and works only for Linux, but in future it w
 
 # Usage
 
-All you need to use this library, is include files in directory `include` and compile executable with static library `libvengine_bundle.a`
+All you need to use this library, is include files in directory `include` and compile executable with static library `libvengine_bundle.a` and few others shared library like so:
+```sh
+gcc -o main main.c build/libvengine_bundle.a -lm -lstdc++ -Iinclude
+```
 
 Program code example:
 
