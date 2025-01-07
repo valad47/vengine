@@ -23,7 +23,7 @@ int main() {
 
     vengine_loadfile(L, "main.luau"); //Loading file to a vengine state
 
-    char *src = "print("Hello, vEngine!")"; //Simple Luau code string
+    char *src = "print(\"Hello, vEngine!\")"; //Simple Luau code string
     vengine_loadstring(L, src, strlen(src), "Chunkname"); //Loading string to a vengine state
 
     vengine_runtime_start(L); //Starting vengine runtime
