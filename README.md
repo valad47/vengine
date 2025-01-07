@@ -78,6 +78,6 @@ To build bundled library, use this command:
 Or, if you want to link every library separately, use this:
 
 ```sh
-cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInf
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build build
 ```
