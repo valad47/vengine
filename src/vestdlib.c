@@ -58,7 +58,11 @@ const char *lua_globals =
 "";
 
 void load_libtask(lua_State *L) {
-    FILE *fd = fopen("/home/valad47/dev/vengine/src/task.lua", "rb");
+    FILE *fd = fopen("/home/valad47/dev/vengine/src/task.lua", "rb"); //TODO: remove harlinking
+    if(fd == NULL) {
+        perror("Failed to open libtask file");
+        exit(1);
+    }
     fseek(fd, 0, SEEK_END);
     int length = ftell(fd);
 
@@ -69,7 +73,7 @@ void load_libtask(lua_State *L) {
     size_t bytecode_size = 0;
     char *bytecode = luau_compile(buffer, length, NULL, &bytecode_size);
     if(luau_load(L, "libtask", bytecode, bytecode_size, 0) != LUA_OK) {
-        printf("What the fuck you gave me? This file don't fucking work.\n%s", luaL_checkstring(L, -1));
+        printf("Failed to initialize libtask:\n\t%s\n", luaL_checkstring(L, -1));
         exit(1);
     }
 
