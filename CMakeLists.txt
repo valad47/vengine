@@ -31,4 +31,4 @@ add_library(vengine STATIC src/main.c src/veruntime.c src/vestdlib.c src/veinsta
 set_property(TARGET vengine PROPERTY C_STANDARD 23)
 
 target_link_libraries(vengine Luau.Compiler Luau.VM raylib)
-target_include_directories(vengine PRIVATE include)
+target_include_directories(vengine PUBLIC include)
