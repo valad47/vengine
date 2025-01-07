@@ -29,6 +29,41 @@ int main() {
 }
 ```
 
+Luau part example:
+
+```luau
+SetFPS(60)
+SetWindowSize(1280, 720)
+local x, y, z = 255, 0, 0
+task.spawn(function()
+    local direction = 0
+
+    while task.wait() do
+        while x ~= 255 do
+            x += 1
+            z -= 1
+            task.wait()
+        end
+        while y ~= 255 do
+            y += 1
+            x -= 1
+            task.wait()
+        end
+        while z ~= 255 do
+            z += 1
+            y -= 1
+            task.wait()
+        end
+    end
+end)
+
+task.spawn( function()
+      while task.wait() do
+         SetBackgroundColor(x, y, z)
+      end
+end)
+```
+
 # Building
 
 To build bundled library, use this command:
