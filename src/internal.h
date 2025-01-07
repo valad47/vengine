@@ -15,7 +15,6 @@ luaL_typeerror(L, id, lua_typename(L, type))
 
 typedef struct vengine_State {
     lua_State *L;
-    lua_CFunction lua_loop;
     bool show_fps;
     Color bg_color;
 } vengine_State;
