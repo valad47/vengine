@@ -116,4 +116,5 @@ void vel_openlib(lua_State *L) {
         exit(1);
     };
     load_libtask(L);
+    vel_inslib(L);
 }

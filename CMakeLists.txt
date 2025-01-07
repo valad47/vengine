@@ -16,7 +16,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(raylib)
 
-add_library(vengine src/main.c src/veruntime.c src/vestdlib.c)
+add_library(vengine src/main.c src/veruntime.c src/vestdlib.c src/veinstance.c)
 set_property(TARGET vengine PROPERTY C_STANDARD 23)
 
 target_link_libraries(vengine Luau.Compiler Luau.VM raylib)
