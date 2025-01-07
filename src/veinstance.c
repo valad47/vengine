@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 static int vel_newindex(lua_State* L) {
+    printf("Stack size: %d\n", lua_gettop(L));
     lua_getmetatable(L, 1);
     lua_pushvalue(L, 2);
     lua_gettable(L, 4);
@@ -33,6 +34,8 @@ static int vel_newindex(lua_State* L) {
         lua_pushvalue(L, 3);
         lua_settable(L, 4);
     };
+
+    printf("Stack size at end: %d\n", lua_gettop(L));
     return 0;
 }
 
@@ -52,6 +55,9 @@ static int vel_inew(lua_State* L) {
 
     lua_pushstring(L, "It's new Instance!");
     lua_setfield(L, -2, "Name");
+
+    lua_pushboolean(L, true);
+    lua_setfield(L, -2, "Visible");
 
     lua_setmetatable(L, -2);
 
