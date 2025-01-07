@@ -14,12 +14,25 @@ static int vel_newindex(lua_State* L) {
         lua_getfield(L, 4, "__type");
         luaL_error(L, "%s is not a valid member of %s \"%s\"", lua_tostring(L, 2), lua_tostring(L, -1), lua_tostring(L, -2));
     }
-    lua_pop(L, 1);
 
-    lua_pushvalue(L, 2);
-    lua_pushvalue(L, 3);
-    lua_settable(L, -3);
-
+    switch(lua_type(L, -1)) {
+    case LUA_TSTRING:
+        if(lua_type(L, 3) != LUA_TSTRING && lua_type(L, 3) != LUA_TNUMBER) {
+            luaL_error(L, "Unable to assing property %s. Expected %s, got %s", lua_tostring(L, 2), lua_typename(L, LUA_TSTRING), luaL_typename(L, 3));
+        }
+        const char *str = lua_tostring(L, 3);
+        lua_pushvalue(L, 2);
+        lua_pushstring(L, str);
+        lua_settable(L, 4);
+        break;
+    default:
+        if(lua_type(L, 3) != lua_type(L, -1)) {
+            luaL_error(L, "Unable to assing property %s. Expected %s, got %s", lua_tostring(L, 2), luaL_typename(L, -1), luaL_typename(L, 3));
+        }
+        lua_pushvalue(L, 2);
+        lua_pushvalue(L, 3);
+        lua_settable(L, 4);
+    };
     return 0;
 }
 
