@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cmake -B build
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInf
 cmake --build build -j8
 
 rm build/libvengine_bundle.a 
