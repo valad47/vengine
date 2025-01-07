@@ -12,6 +12,7 @@ function task.step()
         if coroutine.status(v) == "dead" then
             jobs[i] = nil
             jobs_count = jobs_count - 1
+            print("Deleted", v)
         end
     end
 
