@@ -36,7 +36,7 @@ int vengine_close(vengine_State* L) {
     return 0;
 }
 
-void vengine_loadstring(vengine_State* L, const char *str, const char *chunkname) {
+void vengine_loadstring(vengine_State* L, const char *str, int length, const char *chunkname) {
     VENGINE_FUNC;
 
     if(chunkname == NULL) {
@@ -44,14 +44,19 @@ void vengine_loadstring(vengine_State* L, const char *str, const char *chunkname
     }
 
     size_t bytecode_size;
-    char *bytecode = luau_compile(str, strlen(str), NULL, &bytecode_size);
+    char *bytecode = luau_compile(str, length, NULL, &bytecode_size);
 
     lua_getglobal(L->L, "task");
     lua_getfield(L->L, -1, "spawn");
 
     lua_State* newthread = lua_newthread(L->L);
-    luau_load(newthread, chunkname, bytecode, bytecode_size, 0);
+    int result = luau_load(newthread, chunkname, bytecode, bytecode_size, 0);
     luaL_sandboxthread(newthread);
+
+    if(result != LUA_OK) {
+        printf("Failed to load bytecode:\n\t%s\n", lua_tostring(newthread, -1));
+        exit(1);
+    }
 
     lua_call(L->L, 1, 0);
     free(bytecode);
@@ -73,13 +78,13 @@ void vengine_loadfile(vengine_State* L, const char *filename) {
         fclose(file);
         return;
     }
-
     fseek(file, 0, SEEK_SET);
 
     char *buffer = malloc(length);
-    fread(buffer, 1, length, file);
+    memset(buffer, 0, length);
+    int readsize = fread(buffer, 1, length, file);
 
-    vengine_loadstring(L, buffer, filename);
+    vengine_loadstring(L, buffer, readsize, filename);
 
     free(buffer);
     fclose(file);
