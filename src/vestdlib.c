@@ -8,10 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define expect(L, id, type)\
-if(lua_type(L, id) != type)\
-luaL_typeerror(L, id, lua_typename(L, type))
-
 static int vel_setwindowsize(lua_State *L) {
     expect(L, 1, LUA_TNUMBER);
     expect(L, 2, LUA_TNUMBER);

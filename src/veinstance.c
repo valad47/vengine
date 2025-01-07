@@ -3,6 +3,26 @@
 #include "internal.h"
 #include "vengine.h"
 
+#include <stdio.h>
+
+static int vel_newindex(lua_State* L) {
+    lua_getmetatable(L, 1);
+    lua_pushvalue(L, 2);
+    lua_gettable(L, 4);
+    if(lua_isnil(L, -1)) {
+        lua_getfield(L, 4, "Name");
+        lua_getfield(L, 4, "__type");
+        luaL_error(L, "%s is not a valid member of %s \"%s\"", lua_tostring(L, 2), lua_tostring(L, -1), lua_tostring(L, -2));
+    }
+    lua_pop(L, 1);
+
+    lua_pushvalue(L, 2);
+    lua_pushvalue(L, 3);
+    lua_settable(L, -3);
+
+    return 0;
+}
+
 static int vel_inew(lua_State* L) {
     lua_settop(L, 0);
     lua_newuserdata(L, sizeof(vengine_Instance));
@@ -11,8 +31,8 @@ static int vel_inew(lua_State* L) {
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
 
-//    lua_pushvalue(L, -1);
-//    lua_setfield(L, -2, "__newindex");
+    lua_pushcfunction(L, vel_newindex, NULL);
+    lua_setfield(L, -2, "__newindex");
 
     lua_pushstring(L, "Instance");
     lua_setfield(L, -2, "__type");
@@ -40,7 +60,7 @@ void vel_inslib(lua_State* L) {
     luaL_Reg reg[] = {
         {"new", vel_inew},
         {"GetAllInstances", vel_getins},
-        
+
         {NULL, NULL}
     };
     lua_pushvalue(L, LUA_GLOBALSINDEX);

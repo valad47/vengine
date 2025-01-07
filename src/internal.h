@@ -9,6 +9,10 @@
 #include <string.h>
 #include <assert.h>
 
+#define expect(L, id, type)\
+if(lua_type(L, id) != type)\
+luaL_typeerror(L, id, lua_typename(L, type))
+
 typedef struct vengine_State {
     lua_State *L;
     lua_CFunction lua_loop;
