@@ -5,6 +5,15 @@
 
 #include <stdio.h>
 
+const char *ve_classnames[] = {
+    "Rectangle",
+    "Circle"
+};
+
+const char *ve_getclassname(VE_CLASS n) {
+    return ve_classnames[n-1];
+}
+
 static int vel_newindex(lua_State* L) {
     printf("Stack size: %d\n", lua_gettop(L));
     lua_getmetatable(L, 1);
@@ -40,7 +49,7 @@ static int vel_newindex(lua_State* L) {
 }
 
 static int vel_inew(lua_State* L) {
-    lua_settop(L, 0);
+    expect(L, 1, LUA_TNUMBER);
     lua_newuserdata(L, sizeof(vengine_Instance));
 
     lua_newtable(L);
@@ -52,6 +61,10 @@ static int vel_inew(lua_State* L) {
 
     lua_pushstring(L, "Instance");
     lua_setfield(L, -2, "__type");
+
+    VE_CLASS class = lua_tointeger(L, 1);
+    lua_pushstring(L, ve_getclassname(class));
+    lua_setfield(L, -2, "classname");
 
     lua_pushstring(L, "It's new Instance!");
     lua_setfield(L, -2, "Name");
@@ -75,6 +88,36 @@ static int vel_getins(lua_State* L) {
     return 1;
 }
 
+void ve_reg(lua_State *L, const char* ename, ve_Enum_Reg* reg) {
+    lua_getfield(L, LUA_GLOBALSINDEX, "Enum");
+    if(!lua_istable(L, -1)) {
+        lua_pop(L, 1);
+        lua_newtable(L);
+        lua_pushvalue(L, -1);
+        lua_setfield(L, LUA_GLOBALSINDEX, "Enum");
+    }
+
+    lua_newtable(L);
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -3, ename);
+
+    for(; reg->name; reg++) {
+        lua_pushnumber(L, reg->value);
+        lua_setfield(L, -2, reg->name);
+    }
+}
+
+static int vel_enums(lua_State* L) {
+    ve_Enum_Reg enums[] = {
+        {"Rectangle", VE_RECTANGLE},
+        {"Circle", VE_CIRCLE},
+
+        {NULL, -1}
+    };
+
+    ve_reg(L, "Classes", enums);
+}
+
 void vel_inslib(lua_State* L) {
     luaL_Reg reg[] = {
         {"new", vel_inew},
@@ -89,4 +132,6 @@ void vel_inslib(lua_State* L) {
 
     lua_newtable(L);
     lua_setfield(L, LUA_REGISTRYINDEX, "_instances");
+
+    vel_enums(L);
 }
