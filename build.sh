@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=clang
 cmake --build build -j8
 
 rm build/libvengine_bundle.a 

@@ -58,28 +58,19 @@ const char *lua_globals =
 "";
 
 void load_libtask(lua_State *L) {
-    FILE *fd = fopen("/home/valad47/dev/vengine/src/task.lua", "rb"); //TODO: remove harlinking
-    if(fd == NULL) {
-        perror("Failed to open libtask file");
-        exit(1);
-    }
-    fseek(fd, 0, SEEK_END);
-    int length = ftell(fd);
-
-    fseek(fd, 0, SEEK_SET);
-    char *buffer = malloc(sizeof(char) * length);
-    fread(buffer, 1, length, fd);
+    char buffer[] = {
+        #embed "task.lua"
+        ,'\0'
+    };
 
     size_t bytecode_size = 0;
-    char *bytecode = luau_compile(buffer, length, NULL, &bytecode_size);
+    char *bytecode = luau_compile(buffer, strlen(buffer), NULL, &bytecode_size);
     if(luau_load(L, "libtask", bytecode, bytecode_size, 0) != LUA_OK) {
         printf("Failed to initialize libtask:\n\t%s\n", luaL_checkstring(L, -1));
         exit(1);
     }
 
-    fclose(fd);
     free(bytecode);
-    free(buffer);
 
     if(lua_pcall(L, 0, 1, 0) != LUA_OK) {
         printf("your code is bullshit, check it again. Error:\n%s\n", luaL_checkstring(L, -1));

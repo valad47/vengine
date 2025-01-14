@@ -69,6 +69,8 @@ end)
 
 # Building
 
+### NOTE: to build library, you must have `clang` version 19, or compiler that supports `#embed` feature
+
 To build bundled library, use this command:
 
 ```sh
@@ -78,6 +80,6 @@ To build bundled library, use this command:
 Or, if you want to link every library separately, use this:
 
 ```sh
-cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=clang
 cmake --build build
 ```
