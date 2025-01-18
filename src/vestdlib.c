@@ -62,21 +62,25 @@ void load_libtask(lua_State *L) {
         #embed "task.lua"
         ,'\0'
     };
-
     size_t bytecode_size = 0;
     char *bytecode = luau_compile(buffer, strlen(buffer), NULL, &bytecode_size);
-    if(luau_load(L, "libtask", bytecode, bytecode_size, 0) != LUA_OK) {
-        printf("Failed to initialize libtask:\n\t%s\n", luaL_checkstring(L, -1));
+    if(luau_load(L, "task.lua", bytecode, bytecode_size, 0) != LUA_OK) {
+        printf("Failed to load %s:\n\t%s\n", "task.lua", luaL_checkstring(L, -1));
         exit(1);
     }
-
     free(bytecode);
-
     if(lua_pcall(L, 0, 1, 0) != LUA_OK) {
-        printf("your code is bullshit, check it again. Error:\n%s\n", luaL_checkstring(L, -1));
+        printf("Providen file has execution error:\n%s", luaL_checkstring(L, -1));
         exit(1);
     };
+}
 
+static int vel_setlocal(lua_State *L) {
+    expect(L, 1, LUA_TSTRING);
+    expect(L, 2, LUA_TFUNCTION);
+    lua_settop(L, 2);
+    lua_settable(L, LUA_REGISTRYINDEX);
+    return 0;
 }
 
 void vel_openlib(lua_State *L) {
@@ -92,6 +96,16 @@ void vel_openlib(lua_State *L) {
 
     lua_pushvalue(L, LUA_GLOBALSINDEX);
     luaL_register(L, NULL, funcs);
+    lua_pop(L, 1);
+
+    static const luaL_Reg locals[] = {
+        {"setlocal", vel_setlocal},
+
+        {NULL, NULL}
+    };
+
+    lua_pushvalue(L, LUA_ENVIRONINDEX);
+    luaL_register(L, NULL, locals);
     lua_pop(L, 1);
 
     size_t bytecode_size = 0;

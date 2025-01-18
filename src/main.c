@@ -50,11 +50,11 @@ void vengine_loadstring(vengine_State* L, const char *str, int length, const cha
     lua_getfield(L->L, -1, "spawn");
 
     lua_State* newthread = lua_newthread(L->L);
-    int result = luau_load(newthread, chunkname, bytecode, bytecode_size, 0);
+    int result = luau_load(newthread, chunkname, bytecode, bytecode_size, LUA_GLOBALSINDEX);
     luaL_sandboxthread(newthread);
 
     if(result != LUA_OK) {
-        printf("Failed to load bytecode:\n\t%s\n", lua_tostring(newthread, -1));
+        printf("Failed to load bytecode:\n%s\n", lua_tostring(newthread, -1));
         exit(1);
     }
 
