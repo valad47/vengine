@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(gengine)
+project(vengine)
 
 option(LUAU_BUILD_CLI "Build CLI" OFF)
 option(LUAU_BUILD_TESTS "Build tests" OFF)
