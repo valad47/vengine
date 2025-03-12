@@ -18,6 +18,7 @@ static int vel_newindex(lua_State* L) {
     lua_getmetatable(L, 1);
     lua_pushvalue(L, 2);
     lua_gettable(L, 4);
+
     if(lua_isnil(L, -1)) {
         lua_getfield(L, 4, "Name");
         lua_getfield(L, 4, "__type");
@@ -71,6 +72,15 @@ static int vel_inew(lua_State* L) {
 
     lua_pushboolean(ML, true);
     lua_setfield(ML, -2, "Visible");
+
+    lua_newtable(ML);
+    lua_setfield(ML, -2, "Position");
+
+    lua_newtable(ML);
+    lua_setfield(ML, -2, "Size");
+
+    lua_newtable(ML);
+    lua_setfield(ML, -2, "Color");
 
     lua_setmetatable(ML, -2);
 
@@ -140,6 +150,23 @@ void ve_drawscript(lua_State *L) {
 
 }
 
+static int vel_drawrec(lua_State* L) {
+    DrawRectangle(
+        lua_tonumber(L, 1),
+        lua_tonumber(L, 2),
+        lua_tonumber(L, 3),
+        lua_tonumber(L, 4),
+        (Color) {
+            lua_tonumber(L, 5),
+            lua_tonumber(L, 6),
+            lua_tonumber(L, 7),
+            255
+        }
+        );
+
+    return 0;
+}
+
 void vel_inslib(lua_State* L) {
     luaL_Reg reg[] = {
         {"new", vel_inew},
@@ -149,6 +176,16 @@ void vel_inslib(lua_State* L) {
     };
     lua_pushvalue(L, LUA_GLOBALSINDEX);
     luaL_register(L, "Instance", reg);
+
+    lua_pop(L, 1);
+
+    luaL_Reg reg2[] = {
+        {"DrawRectangle", vel_drawrec},
+
+        {NULL, NULL}
+    };
+    lua_pushvalue(L, LUA_REGISTRYINDEX);
+    luaL_register(L, "__draw", reg2);
 
     lua_pop(L, 1);
 

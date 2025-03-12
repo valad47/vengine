@@ -48,9 +48,10 @@ void vengine_loadstring(vengine_State* L, const char *str, int length, const cha
 
     lua_getglobal(L->L, "task");
     lua_getfield(L->L, -1, "spawn");
+    lua_remove(L->L, -2);
 
     lua_State* newthread = lua_newthread(L->L);
-    int result = luau_load(newthread, chunkname, bytecode, bytecode_size, LUA_GLOBALSINDEX);
+    int result = luau_load(newthread, chunkname, bytecode, bytecode_size, 0);
     luaL_sandboxthread(newthread);
 
     if(result != LUA_OK) {
@@ -58,7 +59,11 @@ void vengine_loadstring(vengine_State* L, const char *str, int length, const cha
         exit(1);
     }
 
-    lua_call(L->L, 1, 0);
+    if(lua_pcall(L->L, 1, 0, 0) != LUA_OK) {
+        printf("Failed to create thread:\n%s", lua_tostring(L->L, -1));
+        exit(1);
+    }
+
     free(bytecode);
 
     return;
