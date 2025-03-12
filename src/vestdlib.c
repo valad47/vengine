@@ -77,7 +77,6 @@ void load_libtask(lua_State *L) {
 
 static int vel_setlocal(lua_State *L) {
     expect(L, 1, LUA_TSTRING);
-    expect(L, 2, LUA_TFUNCTION);
     lua_settop(L, 2);
     lua_settable(L, LUA_REGISTRYINDEX);
     return 0;

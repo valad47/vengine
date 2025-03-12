@@ -23,7 +23,7 @@ function task.step()
         total_jobs = total_jobs + 1
         local pass, err = coroutine.resume(table.unpack(v))
         if not pass then
-           print("Error in thread:\n", err)
+           print("Error in thread ["..tostring(v[1]).."]:\n", err)
         end
     end
 
@@ -32,7 +32,7 @@ function task.step()
             wait_poll[i] = nil
             local pass, err = coroutine.resume(i)
         if not pass then
-           print("Error in thread:\n", err)
+           print("Error in thread ["..tostring(i).."]:\n", err)
         end
         end
     end

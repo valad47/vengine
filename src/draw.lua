@@ -1,14 +1,15 @@
 local shapes = {}
 
 function shapes.Rectangle(obj)
+   obj.OnFrame:Fire(obj)
    __draw.DrawRectangle(
       obj.Position[1],
       obj.Position[2],
       obj.Size[1],
       obj.Size[2],
-      255,
-      255,
-      255
+      obj.Color[1],
+      obj.Color[2],
+      obj.Color[3]
    )
 end
 

@@ -82,6 +82,12 @@ static int vel_inew(lua_State* L) {
     lua_newtable(ML);
     lua_setfield(ML, -2, "Color");
 
+    lua_getfield(ML, LUA_REGISTRYINDEX, "Signal");
+    lua_getfield(ML, -1, "new");
+    lua_pcall(ML, 0, 1, 0);
+    lua_setfield(ML, -3, "OnFrame");
+    lua_pop(ML, 1);
+
     lua_setmetatable(ML, -2);
 
     lua_getfield(ML, LUA_REGISTRYINDEX, "_instances");
@@ -149,6 +155,24 @@ void ve_drawscript(lua_State *L) {
     };
 
 }
+void ve_signalscript(lua_State *L) {
+    char buffer[] = {
+        #embed "signal.lua"
+        ,'\0'
+    };
+    size_t bytecode_size = 0;
+    char *bytecode = luau_compile(buffer, strlen(buffer), NULL, &bytecode_size);
+    if(luau_load(L, "signal.lua", bytecode, bytecode_size, 0) != LUA_OK) {
+        printf("Failed to load %s:\n\t%s\n", "signal.lua", luaL_checkstring(L, -1));
+        exit(1);
+    }
+    free(bytecode);
+    if(lua_pcall(L, 0, 1, 0) != LUA_OK) {
+        printf("Providen file has execution error:\n%s", luaL_checkstring(L, -1));
+        exit(1);
+    };
+
+}
 
 static int vel_drawrec(lua_State* L) {
     DrawRectangle(
@@ -195,4 +219,5 @@ void vel_inslib(lua_State* L) {
     vel_enums(L);
 
     ve_drawscript(L);
+    ve_signalscript(L);
 }
