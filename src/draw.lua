@@ -2,7 +2,7 @@ local shapes = {}
 
 function shapes.Rectangle(obj)
    obj.OnFrame:Fire(obj)
-   __draw.DrawRectangle(
+   if obj.Visible then __draw.DrawRectangle(
       obj.Position[1],
       obj.Position[2],
       obj.Size[1],
@@ -10,7 +10,7 @@ function shapes.Rectangle(obj)
       obj.Color[1],
       obj.Color[2],
       obj.Color[3]
-   )
+   ) end
 end
 
 function shapes.Circle()
